@@ -1,0 +1,1352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Problem Solving with Equations – Mr. McLean Math</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg:#050814;
+      --card:#101528;
+      --card-soft:#151b33;
+      --accent:#ffb400;
+      --accent-soft:#ffd666;
+      --accent-hard:#ff7a3c;
+      --text:#f4f6ff;
+      --muted:#a3aedc;
+      --danger:#ff4b6b;
+      --correct:#3ac77a;
+      --border:#232a44;
+      --shadow:0 18px 40px rgba(0,0,0,0.55);
+      --input:#0a1020;
+      --chip:#1b2340;
+      --chip-active:#28335a;
+      --tag-easy:#1ea96a;
+      --tag-med:#f1b52c;
+      --tag-hard:#e05a3c;
+      --font-main:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family:var(--font-main);
+      background:radial-gradient(circle at top,#1a2340 0,#050814 60%);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+    }
+    body.high-contrast{
+      --bg:#000;
+      --card:#000;
+      --card-soft:#000;
+      --text:#fff;
+      --muted:#ddd;
+      --border:#fff;
+      --chip:#111;
+      --chip-active:#333;
+    }
+    .app{
+      width:100%;
+      max-width:980px;
+      background:linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));
+      border-radius:24px;
+      padding:20px 18px 24px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,0.06);
+    }
+    @media (min-width:768px){
+      .app{padding:24px 28px 30px;}
+    }
+    h1{
+      margin:0 0 4px;
+      font-size:1.4rem;
+      letter-spacing:.03em;
+    }
+    .subtitle{
+      font-size:.9rem;
+      color:var(--muted);
+      margin-bottom:14px;
+    }
+    .top-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:12px;
+    }
+    .mode-toggle{
+      display:inline-flex;
+      padding:2px;
+      border-radius:999px;
+      background:rgba(0,0,0,0.4);
+      border:1px solid var(--border);
+    }
+    .mode-btn{
+      border:none;
+      background:transparent;
+      color:var(--muted);
+      padding:6px 14px;
+      border-radius:999px;
+      font-size:.86rem;
+      cursor:pointer;
+    }
+    .mode-btn.active{
+      background:var(--accent);
+      color:#000;
+      font-weight:600;
+    }
+    .difficulty-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-bottom:8px;
+    }
+    .chip{
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--chip);
+      padding:4px 10px;
+      font-size:.8rem;
+      color:var(--muted);
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .chip span.icon{font-size:.9rem;}
+    .chip.active{
+      background:var(--chip-active);
+      color:var(--text);
+      border-color:var(--accent-soft);
+    }
+    .chip.easy .icon{color:var(--tag-easy);}
+    .chip.medium .icon{color:var(--tag-med);}
+    .chip.hard .icon{color:var(--tag-hard);}
+    .chip.mixed .icon{color:var(--accent-soft);}
+    .controls-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:10px;
+    }
+    .pill-toggle{
+      display:flex;
+      align-items:center;
+      gap:4px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:rgba(0,0,0,0.35);
+      border:1px solid var(--border);
+      font-size:.78rem;
+      color:var(--muted);
+    }
+    .pill-toggle input,
+    .pill-toggle select{
+      font-size:.78rem;
+      background:transparent;
+      border:none;
+      color:inherit;
+      outline:none;
+    }
+    .pill-toggle input[type="checkbox"]{
+      width:14px;
+      height:14px;
+      accent-color:var(--accent);
+      cursor:pointer;
+    }
+    .pill-toggle select{
+      cursor:pointer;
+    }
+    .main-grid{
+      display:grid;
+      gap:14px;
+    }
+    @media (min-width:900px){
+      .main-grid{
+        grid-template-columns:minmax(0,2.1fr) minmax(0,1.2fr);
+        align-items:flex-start;
+      }
+    }
+    .card{
+      background:var(--card);
+      border-radius:18px;
+      border:1px solid var(--border);
+      padding:14px 14px 16px;
+    }
+    .card h2{
+      margin:0 0 8px;
+      font-size:1rem;
+    }
+    .question-text{
+      font-size:.96rem;
+      line-height:1.5;
+      margin-bottom:10px;
+      white-space:pre-wrap;
+    }
+    .answer-row{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      margin-bottom:6px;
+    }
+    .answer-input{
+      flex:1;
+      padding:8px 10px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:var(--input);
+      color:var(--text);
+      font-size:1rem;
+      outline:none;
+    }
+    .answer-input:focus{
+      border-color:var(--accent-soft);
+      box-shadow:0 0 0 1px rgba(255,255,255,0.08);
+    }
+    button.main-btn{
+      border:none;
+      border-radius:10px;
+      padding:8px 14px;
+      font-size:.9rem;
+      font-weight:600;
+      cursor:pointer;
+      background:var(--accent);
+      color:#000;
+      min-width:80px;
+      transition:transform .05s ease, box-shadow .05s ease, background .15s;
+    }
+    button.main-btn:active{
+      transform:translateY(1px);
+      box-shadow:none;
+    }
+    button.main-btn[disabled]{
+      opacity:0.5;
+      cursor:default;
+    }
+    .secondary-btn{
+      border:none;
+      border-radius:999px;
+      padding:4px 10px;
+      font-size:.78rem;
+      cursor:pointer;
+      background:rgba(255,255,255,0.04);
+      color:var(--muted);
+      border:1px solid var(--border);
+    }
+    .secondary-btn:hover{
+      background:rgba(255,255,255,0.07);
+    }
+    .feedback{
+      margin-top:6px;
+      font-size:.88rem;
+      min-height:1.2em;
+    }
+    .feedback.correct{color:var(--correct);}
+    .feedback.incorrect{color:var(--danger);}
+    .correct-answer{
+      font-size:.82rem;
+      color:var(--muted);
+      margin-top:3px;
+    }
+    .steps{
+      margin-top:6px;
+      padding:8px 10px;
+      background:var(--card-soft);
+      border-radius:10px;
+      font-size:.82rem;
+      color:var(--muted);
+      white-space:pre-wrap;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      font-size:.78rem;
+      border-radius:999px;
+      padding:2px 8px;
+      background:rgba(0,0,0,0.25);
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+    .tag .dot{
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:var(--muted);
+    }
+    .tag.easy .dot{background:var(--tag-easy);}
+    .tag.medium .dot{background:var(--tag-med);}
+    .tag.hard .dot{background:var(--tag-hard);}
+    .stats-list{
+      list-style:none;
+      padding:0;
+      margin:6px 0 0;
+      font-size:.84rem;
+      color:var(--muted);
+    }
+    .stats-list li{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:2px 0;
+    }
+    .incorrect-list{
+      margin-top:6px;
+      max-height:190px;
+      overflow:auto;
+      border-top:1px dashed rgba(255,255,255,0.08);
+      padding-top:6px;
+      font-size:.8rem;
+    }
+    .incorrect-item{
+      margin-bottom:6px;
+      padding-bottom:4px;
+      border-bottom:1px dashed rgba(255,255,255,0.06);
+    }
+    .incorrect-item:last-child{
+      border-bottom:none;
+      padding-bottom:0;
+    }
+    .incorrect-q{
+      color:var(--text);
+    }
+    .incorrect-a{
+      color:var(--muted);
+    }
+    .footer{
+      margin-top:10px;
+      font-size:.8rem;
+      color:var(--muted);
+      text-align:right;
+      opacity:0.8;
+    }
+    /* Worksheet */
+    .worksheet-controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:8px;
+    }
+    .worksheet-output{
+      max-height:340px;
+      overflow:auto;
+      background:var(--card-soft);
+      border-radius:12px;
+      padding:10px;
+      font-size:.86rem;
+    }
+    .worksheet-output h3{
+      margin:0 0 6px;
+      font-size:.9rem;
+    }
+    .worksheet-output ol{
+      margin:4px 0 8px 18px;
+      padding:0;
+    }
+    .worksheet-output li{
+      margin-bottom:4px;
+    }
+    .answer-key{
+      border-top:1px solid rgba(255,255,255,0.08);
+      padding-top:6px;
+      margin-top:6px;
+    }
+    .answer-key h4{
+      margin:0 0 4px;
+      font-size:.86rem;
+    }
+    .hidden{display:none;}
+    .timer-display{
+      font-size:.82rem;
+      color:var(--muted);
+      min-width:48px;
+      text-align:center;
+    }
+    .timer-display.active{
+      color:var(--accent-soft);
+    }
+    .dev-banner{
+      font-size:.78rem;
+      margin-top:6px;
+      color:var(--accent-soft);
+    }
+  </style>
+</head>
+<body>
+  <div class="app" aria-label="Problem Solving with Equations game">
+    <div class="top-row">
+      <div>
+        <h1>Problem Solving with Equations</h1>
+        <div class="subtitle">Write and solve an equation for each word problem.</div>
+      </div>
+      <div class="mode-toggle" aria-label="Switch between Game and Worksheet mode">
+        <button class="mode-btn active" data-mode="game">Game mode</button>
+        <button class="mode-btn" data-mode="worksheet">Worksheet mode</button>
+      </div>
+    </div>
+
+    <div class="difficulty-row" aria-label="Select difficulty">
+      <button class="chip easy active" data-diff="easy">
+        <span class="icon">🟢</span><span>Easy</span>
+      </button>
+      <button class="chip medium" data-diff="medium">
+        <span class="icon">🟡</span><span>Medium</span>
+      </button>
+      <button class="chip hard" data-diff="hard">
+        <span class="icon">🔴</span><span>Hard</span>
+      </button>
+      <button class="chip mixed" data-diff="mixed">
+        <span class="icon">🎲</span><span>Mixed</span>
+      </button>
+    </div>
+
+    <div class="controls-row">
+      <div class="pill-toggle">
+        <input id="soundToggle" type="checkbox" checked>
+        <label for="soundToggle">Sound</label>
+      </div>
+      <div class="pill-toggle">
+        <input id="contrastToggle" type="checkbox">
+        <label for="contrastToggle">High contrast</label>
+      </div>
+      <div class="pill-toggle">
+        <input id="timerToggle" type="checkbox">
+        <label for="timerToggle">Timer</label>
+        <select id="timerSelect">
+          <option value="30">30 s</option>
+          <option value="60" selected>60 s</option>
+          <option value="90">90 s</option>
+          <option value="120">120 s</option>
+        </select>
+        <span class="timer-display" id="timerDisplay">--</span>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <!-- Game card -->
+      <section class="card" id="gameCard" aria-live="polite">
+        <div class="tag easy" id="difficultyTag">
+          <span class="dot"></span>
+          <span id="difficultyLabel">Easy question</span>
+        </div>
+        <h2>Current question</h2>
+        <div class="question-text" id="questionText">
+          Loading question…
+        </div>
+        <div class="answer-row">
+          <input id="answerInput" class="answer-input" autocomplete="off" inputmode="decimal"
+                 aria-label="Type your answer here">
+          <button id="submitBtn" class="main-btn">Submit</button>
+          <button id="nextBtn" class="secondary-btn" disabled>Next</button>
+        </div>
+        <div class="feedback" id="feedback" aria-live="assertive"></div>
+        <div class="correct-answer" id="correctAnswer"></div>
+        <button id="showStepsBtn" class="secondary-btn hidden">Show steps</button>
+        <div class="steps hidden" id="stepsPanel"></div>
+      </section>
+
+      <!-- Sidebar: stats & worksheet -->
+      <section class="card">
+        <h2>Session summary</h2>
+        <ul class="stats-list">
+          <li><span>Questions attempted</span><span id="statTotal">0</span></li>
+          <li><span>Correct</span><span id="statCorrect">0</span></li>
+          <li><span>Accuracy</span><span id="statAccuracy">0%</span></li>
+          <li><span>Current streak</span><span id="statStreak">0</span></li>
+          <li><span>Best streak</span><span id="statBestStreak">0</span></li>
+          <li><span>Score</span><span id="statScore">0</span></li>
+        </ul>
+        <button id="toggleIncorrectBtn" class="secondary-btn" style="margin-top:6px;">Show incorrect questions</button>
+        <div id="incorrectPanel" class="incorrect-list hidden"></div>
+
+        <div id="worksheetSection" class="hidden" style="margin-top:12px;">
+          <h2>Worksheet generator</h2>
+          <div class="worksheet-controls">
+            <div class="pill-toggle">
+              <span>Questions:</span>
+              <select id="worksheetCount">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15" selected>15</option>
+              </select>
+            </div>
+            <button id="generateWorksheetBtn" class="main-btn">Generate</button>
+            <button id="toggleAnswersBtn" class="secondary-btn">Reveal answers</button>
+          </div>
+          <div class="worksheet-output" id="worksheetOutput">
+            <h3>Worksheet</h3>
+            <p>Choose a difficulty and click Generate to create a worksheet.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      Created by Mr. McLean Math.
+      <span id="devBanner" class="dev-banner hidden">Dev mode (?dev=1) enabled</span>
+    </div>
+  </div>
+
+  <script>
+    // Utility random helpers
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function choice(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    // Number formatting: thousands with spaces; decimal point
+    function formatNumber(num) {
+      if (typeof num !== "number" || !isFinite(num)) return String(num);
+      const sign = num < 0 ? "-" : "";
+      const abs = Math.abs(num);
+      const fixed = Number.isInteger(abs) ? abs.toString() : abs.toString();
+      const parts = fixed.split(".");
+      let intPart = parts[0];
+      const frac = parts.length > 1 ? "." + parts[1] : "";
+      const regex = /\B(?=(\d{3})+(?!\d))/g;
+      intPart = intPart.replace(regex, " ");
+      return sign + intPart + frac;
+    }
+
+    function parseAnswer(value) {
+      if (value == null) return NaN;
+      const s = String(value).trim().replace(",", ".");
+      if (s === "") return NaN;
+      return Number(s);
+    }
+
+    // Sound via Web Audio API
+    let audioCtx = null;
+    function beep(success=true) {
+      if (!document.getElementById("soundToggle").checked) return;
+      try{
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const duration = success ? 0.12 : 0.16;
+        const freq = success ? 880 : 220;
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.type = "square";
+        oscillator.frequency.value = freq;
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+        gainNode.gain.setValueAtTime(0.12, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+        oscillator.start(now);
+        oscillator.stop(now + duration);
+      }catch(e){}
+    }
+
+    // Problem templates
+    // Each generator returns { question, answer, steps, tier }
+
+    const easyGenerators = [
+      // Divide by number then add
+      function(){
+        const a = choice([2,3,4,5]);
+        const x = randInt(4,40);
+        const b = randInt(1,10);
+        const result = x / a + b;
+        // ensure divisible for nice intermediate
+        const newX = a * randInt(2,30);
+        const c = newX / a + b;
+        const q = `If you divide a number by ${a} and then add ${b}, you get ${formatNumber(c)}.\nWhat is the number?`;
+        const steps =
+`Let the number be x.
+
+x ÷ ${a} + ${b} = ${formatNumber(c)}
+x ÷ ${a} = ${formatNumber(c)} - ${b} = ${formatNumber(c - b)}
+x = ${formatNumber(c - b)} × ${a} = ${formatNumber((c - b) * a)}`;
+        return {question:q,answer:(c-b)*a,steps,tier:"easy"};
+      },
+      // Triangle area: area = base*height/2
+      function(){
+        const height = choice([4,5,6,8]);
+        const base = randInt(4,20);
+        const area = (base * height) / 2;
+        const q = `A triangle has an area of ${formatNumber(area)} cm² and a height of ${formatNumber(height)} cm.\nThe base is x cm long.\nHow long is the base?`;
+        const steps =
+`Area of a triangle: A = (base × height) ÷ 2
+
+${formatNumber(area)} = (x × ${formatNumber(height)}) ÷ 2
+Multiply both sides by 2:
+2 × ${formatNumber(area)} = x × ${formatNumber(height)}
+x = (2 × ${formatNumber(area)}) ÷ ${formatNumber(height)} = ${formatNumber((2*area)/height)} cm`;
+        return {question:q,answer:base,steps,tier:"easy"};
+      },
+      // Ice cream and sweets
+      function(){
+        const sweet = randInt(2,7);
+        const iceCream = randInt(15,25);
+        const total = iceCream + 5 * sweet;
+        const q = `An ice cream and five pieces of candy cost ${formatNumber(total)} kr together.\nThe ice cream costs ${formatNumber(iceCream)} kr.\nHow much does one piece of candy cost?`;
+        const steps =
+`Let x be the price of one piece of candy.
+
+${formatNumber(iceCream)} + 5x = ${formatNumber(total)}
+5x = ${formatNumber(total)} - ${formatNumber(iceCream)} = ${formatNumber(total-iceCream)}
+x = ${formatNumber(total-iceCream)} ÷ 5 = ${formatNumber((total-iceCream)/5)} kr`;
+        return {question:q,answer:sweet,steps,tier:"easy"};
+      },
+      // Rectangle perimeter
+      function(){
+        const x = randInt(2,8);
+        const w = x;
+        const l = 3*x;
+        const perimeter = 2*(w+l);
+        const q = `The width of a rectangle is x cm and the length is 3x cm.\nThe perimeter of the rectangle is ${formatNumber(perimeter)} cm.\nHow long is one of the short sides (the width)?`;
+        const steps =
+`Perimeter P = 2 × (length + width)
+
+${formatNumber(perimeter)} = 2 × (3x + x) = 2 × 4x = 8x
+x = ${formatNumber(perimeter)} ÷ 8 = ${formatNumber(perimeter/8)} cm`;
+        return {question:q,answer:x,steps,tier:"easy"};
+      },
+      // Survey percent
+      function(){
+        const total = randInt(80,300);
+        const percent = choice([25,40,60]);
+        const trained = Math.round(total * percent / 100);
+        const q = `In a survey, ${percent}% of the people said that they exercise regularly.\nThat corresponds to ${formatNumber(trained)} people.\nHow many people were in the survey in total?`;
+        const steps =
+`Let N be the total number of people.
+
+${percent}% of N = ${formatNumber(trained)}
+${percent}/100 × N = ${formatNumber(trained)}
+N = ${formatNumber(trained)} × 100 ÷ ${percent} = ${formatNumber(trained*100/percent)}`;
+        return {question:q,answer:total,steps,tier:"easy"};
+      },
+      // Simple age difference
+      function(){
+        const jacob = randInt(7,15);
+        const diff = randInt(3,8);
+        const filip = jacob + diff;
+        const q = `Filip is ${diff} years older than Jacob.\nTogether they are ${formatNumber(filip + jacob)} years old.\nHow old is each of them? (Give Jacob's age as x.)`;
+        const steps =
+`Let x be Jacob's age.
+
+Filip is x + ${diff}
+
+x + (x + ${diff}) = ${formatNumber(filip + jacob)}
+2x + ${diff} = ${formatNumber(filip + jacob)}
+2x = ${formatNumber(filip + jacob)} - ${diff} = ${formatNumber(filip+jacob-diff)}
+x = ${formatNumber((filip+jacob-diff)/2)} years`;
+        // We ask for Jacob's age; check logic
+        return {question:q,answer:jacob,steps,tier:"easy"};
+      }
+    ];
+
+    const mediumGenerators = [
+      // Letters and a package
+      function(){
+        const letterWeight = randInt(10,40); // grams
+        const lettersCount = 6;
+        const packageWeight = randInt(400,800);
+        const total = lettersCount * letterWeight + packageWeight;
+        const q = `Six letters and one package together weigh ${formatNumber(total)} g.\nThe package alone weighs ${formatNumber(packageWeight)} g.\nAll letters have the same weight.\nHow much does one letter weigh?`;
+        const steps =
+`Let x be the weight of one letter.
+
+${lettersCount}x + ${formatNumber(packageWeight)} = ${formatNumber(total)}
+${lettersCount}x = ${formatNumber(total)} - ${formatNumber(packageWeight)} = ${formatNumber(total-packageWeight)}
+x = ${formatNumber(total-packageWeight)} ÷ ${lettersCount} = ${formatNumber((total-packageWeight)/lettersCount)} g`;
+        return {question:q,answer:letterWeight,steps,tier:"medium"};
+      },
+      // Father and child ages
+      function(){
+        const s = randInt(6,12);
+        const diff = randInt(20,35);
+        const father = s + diff;
+        const factor = randInt(4,7);
+        // adjust so factor*s approx father; instead enforce relation: father = factor*s
+        const child = randInt(5,15);
+        const dad = factor * child;
+        const extra = dad - child;
+        const q = `Sara's father is ${factor} times as old as Sara.\nHe is also ${extra} years older than Sara.\nHow old are they? (Give Sara's age as x.)`;
+        const steps =
+`Let x be Sara's age.
+
+Father is ${factor}x and also x + ${extra}
+
+${factor}x = x + ${extra}
+${factor}x - x = ${extra}
+${factor-1}x = ${extra}
+x = ${extra} ÷ ${factor-1} = ${formatNumber(extra/(factor-1))} years`;
+        return {question:q,answer:child,steps,tier:"medium"};
+      },
+      // Sofa price decreased by 30%
+      function(){
+        const original = randInt(4000,12000);
+        const diff = Math.round(original * 0.30);
+        const q = `The price of a sofa was lowered by 30% and became ${formatNumber(diff)} kr cheaper.\nWhat was the price of the sofa before the reduction?`;
+        const steps =
+`Let P be the original price.
+
+30% of P = ${formatNumber(diff)}
+0.30P = ${formatNumber(diff)}
+P = ${formatNumber(diff)} ÷ 0.30 = ${formatNumber(diff/0.30)} kr`;
+        return {question:q,answer:original,steps,tier:"medium"};
+      },
+      // Boxes with marbles
+      function(){
+        const x = randInt(5,20);
+        const b = 3*x;
+        const c = x + 15;
+        const total = x + b + c;
+        const q = `Three boxes contain marbles.\nBox A has x marbles, box B has three times as many as box A, and box C has 15 more marbles than box A.\nAltogether there are ${formatNumber(total)} marbles.\nHow many marbles are in box A?`;
+        const steps =
+`Let x be the number of marbles in box A.
+
+Box B: 3x
+Box C: x + 15
+
+x + 3x + (x + 15) = ${formatNumber(total)}
+5x + 15 = ${formatNumber(total)}
+5x = ${formatNumber(total)} - 15 = ${formatNumber(total-15)}
+x = ${formatNumber(total-15)} ÷ 5 = ${formatNumber((total-15)/5)}`;
+        return {question:q,answer:x,steps,tier:"medium"};
+      },
+      // Rectangle and triangle sides
+      function(){
+        const longSide = randInt(8,20);
+        const triangleShorter = 3;
+        const rectangleLonger = 1;
+        const triangleSide = longSide - triangleShorter;
+        const rectShort = triangleSide + rectangleLonger;
+        const q = `A rectangle and an isosceles triangle have the same base.\nThe base of the triangle is 3 cm shorter than the base of the rectangle.\nThe sides of the triangle are 1 cm longer than the short sides of the rectangle.\nThe long side of the rectangle is ${formatNumber(longSide)} cm.\nHow long is the base of the triangle (x)?`;
+        const steps =
+`Let x be the base of the triangle.
+
+Rectangle base is x + 3
+
+We know the rectangle's long side is ${formatNumber(longSide)} cm, so:
+x + 3 = ${formatNumber(longSide)}
+x = ${formatNumber(longSide)} - 3 = ${formatNumber(longSide-3)} cm`;
+        return {question:q,answer:triangleSide,steps,tier:"medium"};
+      },
+      // Sum of three consecutive even numbers
+      function(){
+        const first = randInt(20,70);
+        const a = first;
+        const b = first + 2;
+        const c = first + 4;
+        const sum = a + b + c;
+        const q = `The sum of three consecutive even numbers is ${formatNumber(sum)}.\nWhat are the three numbers?\n(Give the smallest number as x.)`;
+        const steps =
+`Let x be the smallest even number.
+
+The next two consecutive even numbers are x + 2 and x + 4.
+
+x + (x + 2) + (x + 4) = ${formatNumber(sum)}
+3x + 6 = ${formatNumber(sum)}
+3x = ${formatNumber(sum)} - 6 = ${formatNumber(sum-6)}
+x = ${formatNumber(sum-6)} ÷ 3 = ${formatNumber((sum-6)/3)}`;
+        return {question:q,answer:first,steps,tier:"medium"};
+      },
+      // Lisa and Fredrik ages (similar to 199)
+      function(){
+        const fredNow = randInt(5,15);
+        const lisaNow = 4 * fredNow;
+        const yearsAgo = 5;
+        const q = `Lisa is four times as old as her son Fredrik.\n${yearsAgo} years ago she was seven times as old as he was.\nHow old are they now? (Give Fredrik's age as x.)`;
+        const steps =
+`Let x be Fredrik's age now.
+
+Lisa is 4x.
+
+${yearsAgo} years ago:
+Fredrik: x - ${yearsAgo}
+Lisa: 4x - ${yearsAgo}
+
+At that time Lisa was seven times as old:
+4x - ${yearsAgo} = 7(x - ${yearsAgo})
+4x - ${yearsAgo} = 7x - ${7*yearsAgo}
+Move terms:
+4x - ${yearsAgo} - 7x + ${7*yearsAgo} = 0
+-3x + ${6*yearsAgo} = 0
+3x = ${6*yearsAgo}
+x = ${6*yearsAgo} ÷ 3 = ${formatNumber((6*yearsAgo)/3)} years`;
+        return {question:q,answer:fredNow,steps,tier:"medium"};
+      }
+    ];
+
+    const hardGenerators = [
+      // Elin buys bike with 3/4 of money
+      function(){
+        const original = randInt(2000,8000);
+        const spent = (3/4)*original;
+        const q = `Elin used three quarters of her money to buy a bicycle for ${formatNumber(spent)} kr.\nHow much money did Elin have to begin with?`;
+        const steps =
+`Let x be the amount of money Elin had.
+
+She spent 3/4 of it on the bicycle:
+(3/4)x = ${formatNumber(spent)}
+
+x = ${formatNumber(spent)} × 4 ÷ 3 = ${formatNumber(spent*4/3)} kr`;
+        return {question:q,answer:original,steps,tier:"hard"};
+      },
+      // Split 65 into two parts with relation 2a = 3b
+      function(){
+        const a = randInt(5,20);
+        const b = Math.round((2*a)/3);
+        const first = a;
+        const second = 65 - first;
+        const q = `The number 65 is split into two smaller numbers.\nIf you multiply the first number by 2 and the second number by 3, the results are the same.\nWhat are the two numbers? (Give the smaller number as x.)`;
+        const steps =
+`Let x be the smaller number.
+Then the larger number is 65 - x.
+
+2x = 3(65 - x)
+2x = 195 - 3x
+2x + 3x = 195
+5x = 195
+x = 195 ÷ 5 = 39`;
+        return {question:q,answer:39,steps,tier:"hard"};
+      },
+      // Maria and Moa Star Wars cards
+      function(){
+        const moa = randInt(10,30);
+        const maria = 5 * moa;
+        const given = randInt(5,15);
+        const mariaAfter = maria - given;
+        const moaAfter = moa + given;
+        const q = `Maria had five times as many Star Wars cards as Moa.\nThen she gave ${given} cards to Moa.\nAfter that they had the same number of cards.\nHow many cards did each of them have at the beginning?\n(Give Moa's original number of cards as x.)`;
+        const steps =
+`Let x be Moa's original number of cards.
+
+Maria had 5x cards.
+
+After giving ${given} cards:
+Maria: 5x - ${given}
+Moa: x + ${given}
+
+They then have the same number:
+5x - ${given} = x + ${given}
+5x - x = ${given} + ${given}
+4x = ${2*given}
+x = ${2*given} ÷ 4 = ${formatNumber((2*given)/4)}`;
+        return {question:q,answer:moa,steps,tier:"hard"};
+      },
+      // Money in two bags
+      function(){
+        const a = randInt(20,200);
+        const b = 2*a + 12;
+        const total = a + b + randInt(0,0); // just a+b but keep style
+        const q = `Bag B contains twice as much money as bag A, plus an extra 12 kr.\nTogether the two bags contain ${formatNumber(total)} kr.\nHow much money is in each bag? (Give the amount in bag A as x.)`;
+        const steps =
+`Let x be the amount in bag A.
+
+Bag B has 2x + 12.
+
+x + (2x + 12) = ${formatNumber(total)}
+3x + 12 = ${formatNumber(total)}
+3x = ${formatNumber(total)} - 12 = ${formatNumber(total-12)}
+x = ${formatNumber(total-12)} ÷ 3 = ${formatNumber((total-12)/3)} kr`;
+        return {question:q,answer:a,steps,tier:"hard"};
+      },
+      // John and Anna wages
+      function(){
+        const anna = randInt(70,120); // kr/hour
+        const john = anna + 10;
+        const hours = 40;
+        const total = hours*anna + hours*john;
+        const q = `John and Anna work at a café.\nJohn has worked there longer than Anna and earns 10 kr more per hour than she does.\nIn a week when they each work ${hours} hours, they earn ${formatNumber(total)} kr altogether.\nWhat is the hourly wage for John and for Anna? (Give Anna's wage as x.)`;
+        const steps =
+`Let x be Anna's hourly wage.
+
+John earns x + 10.
+
+Together in a ${hours}-hour week:
+${hours}x + ${hours}(x + 10) = ${formatNumber(total)}
+${hours}x + ${hours}x + ${hours*10} = ${formatNumber(total)}
+${2*hours}x + ${hours*10} = ${formatNumber(total)}
+${2*hours}x = ${formatNumber(total)} - ${hours*10}
+x = (${formatNumber(total)} - ${hours*10}) ÷ ${2*hours}`;
+        return {question:q,answer:anna,steps,tier:"hard"};
+      },
+      // Camera price changed: 25% off then minus fixed amount
+      function(){
+        const original = randInt(3000,9000);
+        const afterPercent = original * 0.75;
+        const secondCut = randInt(20,200);
+        const final = afterPercent - secondCut;
+        const q = `The price of a film camera is first reduced by 25%.\nLater the price is reduced by another ${formatNumber(secondCut)} kr.\nThe camera now costs ${formatNumber(final)} kr.\nWhat was the original price?`;
+        const steps =
+`Let P be the original price.
+
+After a 25% reduction:
+Price becomes 75% of P = 0.75P
+
+Then the store subtracts ${formatNumber(secondCut)} kr:
+0.75P - ${formatNumber(secondCut)} = ${formatNumber(final)}
+
+0.75P = ${formatNumber(final)} + ${formatNumber(secondCut)} = ${formatNumber(final+secondCut)}
+P = ${formatNumber(final+secondCut)} ÷ 0.75 = ${formatNumber((final+secondCut)/0.75)} kr`;
+        return {question:q,answer:original,steps,tier:"hard"};
+      },
+      // Coins problem
+      function(){
+        const num5 = randInt(4,15);
+        const num10 = randInt(4,15);
+        const totalCoins = num5 + num10;
+        const totalValue = num5*5 + num10*10;
+        const q = `Yining has only 5-kr and 10-kr coins.\nIn total there are ${formatNumber(totalCoins)} coins, worth ${formatNumber(totalValue)} kr.\nHow many coins of each type does Yining have? (Give the number of 5-kr coins as x.)`;
+        const steps =
+`Let x be the number of 5-kr coins.
+
+Then the number of 10-kr coins is ${totalCoins} - x.
+
+Total value:
+5x + 10(${totalCoins} - x) = ${formatNumber(totalValue)}
+5x + ${10*totalCoins} - 10x = ${formatNumber(totalValue)}
+-5x + ${10*totalCoins} = ${formatNumber(totalValue)}
+-5x = ${formatNumber(totalValue)} - ${10*totalCoins}
+x = (${formatNumber(10*totalCoins)} - ${formatNumber(totalValue)}) ÷ 5`;
+        return {question:q,answer:num5,steps,tier:"hard"};
+      },
+      // Scooter and helmet purchase with discount
+      function(){
+        const scooterOriginal = randInt(6000,12000);
+        const discountRate = 0.10;
+        const scooterSale = scooterOriginal * (1-discountRate);
+        const helmet = randInt(300,800);
+        const totalPaid = scooterSale + helmet;
+        const q = `Li bought a moped that was on sale with a 10% discount off the original price.\nShe also bought a helmet for ${formatNumber(helmet)} kr.\nIn total she paid ${formatNumber(totalPaid)} kr.\nWhat was the original price of the moped?`;
+        const steps =
+`Let P be the original price of the moped.
+
+The sale price is 90% of P:
+0.90P
+
+She also buys a helmet for ${formatNumber(helmet)} kr:
+0.90P + ${formatNumber(helmet)} = ${formatNumber(totalPaid)}
+
+0.90P = ${formatNumber(totalPaid)} - ${formatNumber(helmet)} = ${formatNumber(totalPaid-helmet)}
+P = ${formatNumber(totalPaid-helmet)} ÷ 0.90 = ${formatNumber((totalPaid-helmet)/0.90)} kr`;
+        return {question:q,answer:scooterOriginal,steps,tier:"hard"};
+      },
+      // Ticket sales
+      function(){
+        const youthTickets = randInt(40,120);
+        const adultTickets = youthTickets*2;
+        const adultPrice = 50;
+        const youthPrice = 20;
+        const totalMoney = adultTickets*adultPrice + youthTickets*youthPrice;
+        const q = `For a football match, the club sold twice as many adult tickets as youth tickets.\nAdult tickets cost ${formatNumber(adultPrice)} kr and youth tickets cost ${formatNumber(youthPrice)} kr.\nAltogether the ticket sales brought in ${formatNumber(totalMoney)} kr.\nHow many tickets were sold in total? (Let x be the number of youth tickets.)`;
+        const steps =
+`Let x be the number of youth tickets.
+
+Adult tickets: 2x
+
+Total money:
+${adultPrice}·(2x) + ${youthPrice}·x = ${formatNumber(totalMoney)}
+${2*adultPrice}x + ${youthPrice}x = ${formatNumber(totalMoney)}
+${2*adultPrice + youthPrice}x = ${formatNumber(totalMoney)}
+x = ${formatNumber(totalMoney)} ÷ ${2*adultPrice + youthPrice}
+
+Total tickets = x + 2x = 3x`;
+        return {question:q,answer:adultTickets + youthTickets,steps,tier:"hard"};
+      }
+    ];
+
+    function generateProblem(tier) {
+      let actualTier = tier;
+      if (tier === "mixed") {
+        actualTier = choice(["easy","medium","hard"]);
+      }
+      let genArr;
+      if (actualTier === "easy") genArr = easyGenerators;
+      else if (actualTier === "medium") genArr = mediumGenerators;
+      else genArr = hardGenerators;
+
+      const gen = choice(genArr);
+      const problem = gen();
+      problem.tier = actualTier; // ensure matches
+      return problem;
+    }
+
+    // Game state
+    let currentTier = "easy";
+    let currentProblem = null;
+    let waitingForNext = false;
+
+    const stats = {
+      total:0,
+      correct:0,
+      streak:0,
+      bestStreak:0,
+      score:0,
+      incorrect:[] // {question, yourAnswer, correctAnswer}
+    };
+
+    // Timer state
+    let timerEnabled = false;
+    let timerSeconds = 60;
+    let timerRemaining = null;
+    let timerId = null;
+
+    function resetTimer() {
+      const display = document.getElementById("timerDisplay");
+      if (!timerEnabled) {
+        timerRemaining = null;
+        display.textContent = "--";
+        display.classList.remove("active");
+        if (timerId) clearInterval(timerId);
+        timerId = null;
+        return;
+      }
+      if (timerId) clearInterval(timerId);
+      timerRemaining = timerSeconds;
+      display.textContent = timerRemaining + " s";
+      display.classList.add("active");
+      timerId = setInterval(()=>{
+        timerRemaining--;
+        if (timerRemaining <= 0) {
+          timerRemaining = 0;
+          display.textContent = "0 s";
+          clearInterval(timerId);
+          timerId = null;
+          // auto mark as incorrect if no answer submitted
+          if (!waitingForNext) {
+            handleTimeout();
+          }
+          return;
+        }
+        display.textContent = timerRemaining + " s";
+      },1000);
+    }
+
+    function handleTimeout(){
+      const input = document.getElementById("answerInput");
+      const value = input.value.trim();
+      if (value === "") {
+        // show message but count as attempted
+        stats.total++;
+        stats.streak = 0;
+        updateStatsDisplay();
+        const fb = document.getElementById("feedback");
+        fb.textContent = "Time is up. Try the next question.";
+        fb.className = "feedback incorrect";
+        const ca = document.getElementById("correctAnswer");
+        ca.textContent = "Correct answer would have been: " + formatNumber(currentProblem.answer);
+        stats.incorrect.push({
+          question: currentProblem.question,
+          yourAnswer: "(no answer, time up)",
+          correctAnswer: currentProblem.answer
+        });
+        document.getElementById("showStepsBtn").classList.remove("hidden");
+        document.getElementById("stepsPanel").classList.add("hidden");
+        waitingForNext = true;
+        document.getElementById("nextBtn").disabled = false;
+        document.getElementById("submitBtn").disabled = true;
+        beep(false);
+      }
+    }
+
+    // UI update functions
+    function updateDifficultyTag(tier){
+      const tag = document.getElementById("difficultyTag");
+      const label = document.getElementById("difficultyLabel");
+      tag.classList.remove("easy","medium","hard");
+      if (tier === "easy") {
+        tag.classList.add("easy");
+        label.textContent = "Easy question";
+      } else if (tier === "medium") {
+        tag.classList.add("medium");
+        label.textContent = "Medium question";
+      } else {
+        tag.classList.add("hard");
+        label.textContent = "Hard question";
+      }
+    }
+
+    function newQuestion() {
+      currentProblem = generateProblem(currentTier);
+      document.getElementById("questionText").textContent = currentProblem.question;
+      document.getElementById("answerInput").value = "";
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("feedback").className = "feedback";
+      document.getElementById("correctAnswer").textContent = "";
+      document.getElementById("stepsPanel").classList.add("hidden");
+      document.getElementById("showStepsBtn").classList.add("hidden");
+      waitingForNext = false;
+      document.getElementById("submitBtn").disabled = false;
+      document.getElementById("nextBtn").disabled = true;
+      updateDifficultyTag(currentProblem.tier);
+      resetTimer();
+      document.getElementById("answerInput").focus();
+    }
+
+    function updateStatsDisplay(){
+      document.getElementById("statTotal").textContent = stats.total;
+      document.getElementById("statCorrect").textContent = stats.correct;
+      const accuracy = stats.total === 0 ? 0 : Math.round(100*stats.correct/stats.total);
+      document.getElementById("statAccuracy").textContent = accuracy + "%";
+      document.getElementById("statStreak").textContent = stats.streak;
+      document.getElementById("statBestStreak").textContent = stats.bestStreak;
+      document.getElementById("statScore").textContent = stats.score;
+      const panel = document.getElementById("incorrectPanel");
+      panel.innerHTML = "";
+      stats.incorrect.forEach((item,idx)=>{
+        const div = document.createElement("div");
+        div.className = "incorrect-item";
+        const q = document.createElement("div");
+        q.className = "incorrect-q";
+        q.textContent = (idx+1)+". "+item.question.replace(/\n/g," ");
+        const a = document.createElement("div");
+        a.className = "incorrect-a";
+        a.textContent = "Your answer: "+item.yourAnswer+" | Correct: "+formatNumber(item.correctAnswer);
+        div.appendChild(q);
+        div.appendChild(a);
+        panel.appendChild(div);
+      });
+    }
+
+    function handleSubmit(){
+      if (waitingForNext) {
+        // treat as "Next" if Enter pressed
+        nextQuestion();
+        return;
+      }
+      const value = document.getElementById("answerInput").value;
+      const num = parseAnswer(value);
+      const fb = document.getElementById("feedback");
+      const ca = document.getElementById("correctAnswer");
+      const showStepsBtn = document.getElementById("showStepsBtn");
+      const stepsPanel = document.getElementById("stepsPanel");
+      if (!isFinite(num)) {
+        fb.textContent = "Please enter a number.";
+        fb.className = "feedback";
+        return;
+      }
+      stats.total++;
+      const correct = currentProblem.answer;
+      const isCorrect = Math.abs(num - correct) < 0.01;
+      if (isCorrect) {
+        fb.textContent = "Correct!";
+        fb.className = "feedback correct";
+        ca.textContent = "";
+        stats.correct++;
+        stats.streak++;
+        if (stats.streak > stats.bestStreak) stats.bestStreak = stats.streak;
+        stats.score += 10;
+        if (stats.streak > 0 && stats.streak % 5 === 0) stats.score += 5;
+        beep(true);
+      } else {
+        fb.textContent = "Incorrect.";
+        fb.className = "feedback incorrect";
+        ca.textContent = "Correct answer: " + formatNumber(correct);
+        stats.streak = 0;
+        stats.incorrect.push({
+          question: currentProblem.question,
+          yourAnswer: value,
+          correctAnswer: correct
+        });
+        showStepsBtn.classList.remove("hidden");
+        stepsPanel.classList.add("hidden");
+        beep(false);
+      }
+      updateStatsDisplay();
+      waitingForNext = true;
+      document.getElementById("nextBtn").disabled = false;
+      document.getElementById("submitBtn").disabled = true;
+      if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+      }
+    }
+
+    function nextQuestion(){
+      newQuestion();
+    }
+
+    // Worksheet generator
+    function generateWorksheet(){
+      const count = Number(document.getElementById("worksheetCount").value);
+      const output = document.getElementById("worksheetOutput");
+      const diff = currentTier; // use selected difficulty or mixed
+      const problems = [];
+      for (let i=0;i<count;i++){
+        problems.push(generateProblem(diff));
+      }
+      output.innerHTML = "";
+      const h3 = document.createElement("h3");
+      h3.textContent = "Worksheet – "+(diff==="mixed"?"Mixed difficulties":diff.charAt(0).toUpperCase()+diff.slice(1));
+      output.appendChild(h3);
+      const inst = document.createElement("p");
+      inst.textContent = "Solve the problems by writing and solving an equation for each situation.";
+      output.appendChild(inst);
+      const ol = document.createElement("ol");
+      problems.forEach(p=>{
+        const li = document.createElement("li");
+        li.textContent = p.question.replace(/\n/g," ");
+        ol.appendChild(li);
+      });
+      output.appendChild(ol);
+
+      const key = document.createElement("div");
+      key.className = "answer-key hidden";
+      key.id = "worksheetKey";
+      const h4 = document.createElement("h4");
+      h4.textContent = "Answer key";
+      key.appendChild(h4);
+      const ul = document.createElement("ol");
+      problems.forEach((p,idx)=>{
+        const li = document.createElement("li");
+        li.textContent = formatNumber(p.answer);
+        ul.appendChild(li);
+      });
+      key.appendChild(ul);
+      output.appendChild(key);
+
+      // store problems for toggling
+      output.dataset.generated = "1";
+    }
+
+    function toggleWorksheetAnswers(){
+      const output = document.getElementById("worksheetOutput");
+      if (output.dataset.generated !== "1") return;
+      const key = document.getElementById("worksheetKey");
+      const btn = document.getElementById("toggleAnswersBtn");
+      if (key.classList.contains("hidden")) {
+        key.classList.remove("hidden");
+        btn.textContent = "Hide answers";
+      } else {
+        key.classList.add("hidden");
+        btn.textContent = "Reveal answers";
+      }
+    }
+
+    // Mode switching
+    function setMode(mode){
+      const gameCard = document.getElementById("gameCard");
+      const worksheetSection = document.getElementById("worksheetSection");
+      const modeBtns = document.querySelectorAll(".mode-btn");
+      modeBtns.forEach(btn=>{
+        btn.classList.toggle("active", btn.dataset.mode === mode);
+      });
+      if (mode === "game"){
+        gameCard.style.display = "";
+        worksheetSection.classList.add("hidden");
+      } else {
+        gameCard.style.display = "";
+        worksheetSection.classList.remove("hidden");
+      }
+    }
+
+    // Event listeners
+    document.querySelectorAll(".chip").forEach(chip=>{
+      chip.addEventListener("click", ()=>{
+        document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+        chip.classList.add("active");
+        currentTier = chip.dataset.diff;
+        newQuestion();
+      });
+    });
+
+    document.querySelectorAll(".mode-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        setMode(btn.dataset.mode);
+      });
+    });
+
+    document.getElementById("submitBtn").addEventListener("click", handleSubmit);
+    document.getElementById("nextBtn").addEventListener("click", nextQuestion);
+    document.getElementById("answerInput").addEventListener("keydown", (e)=>{
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSubmit();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        document.getElementById("answerInput").value = "";
+      }
+    });
+
+    document.getElementById("toggleIncorrectBtn").addEventListener("click", ()=>{
+      const panel = document.getElementById("incorrectPanel");
+      if (panel.classList.contains("hidden")){
+        panel.classList.remove("hidden");
+        document.getElementById("toggleIncorrectBtn").textContent = "Hide incorrect questions";
+      } else {
+        panel.classList.add("hidden");
+        document.getElementById("toggleIncorrectBtn").textContent = "Show incorrect questions";
+      }
+    });
+
+    document.getElementById("showStepsBtn").addEventListener("click", ()=>{
+      const stepsPanel = document.getElementById("stepsPanel");
+      stepsPanel.textContent = currentProblem.steps;
+      stepsPanel.classList.remove("hidden");
+    });
+
+    document.getElementById("soundToggle").addEventListener("change", ()=>{ /* nothing else needed */ });
+
+    document.getElementById("contrastToggle").addEventListener("change", (e)=>{
+      document.body.classList.toggle("high-contrast", e.target.checked);
+    });
+
+    document.getElementById("timerToggle").addEventListener("change", (e)=>{
+      timerEnabled = e.target.checked;
+      resetTimer();
+    });
+    document.getElementById("timerSelect").addEventListener("change", (e)=>{
+      timerSeconds = Number(e.target.value);
+      if (timerEnabled) resetTimer();
+    });
+
+    document.getElementById("generateWorksheetBtn").addEventListener("click", generateWorksheet);
+    document.getElementById("toggleAnswersBtn").addEventListener("click", toggleWorksheetAnswers);
+
+    // Dev tests
+    function runDevTests(){
+      console.log("Running developer tests for Problem Solving with Equations…");
+      // 1. easy answers non-negative and mostly integers
+      let easyProblems = [];
+      for (let i=0;i<40;i++) easyProblems.push(generateProblem("easy"));
+      const negativesEasy = easyProblems.filter(p=>p.answer<0).length;
+      console.log("Easy problems with negative answers:", negativesEasy);
+      const integerEasy = easyProblems.filter(p=>Number.isInteger(p.answer)).length;
+      console.log("Easy integer answers ratio:", integerEasy+"/"+easyProblems.length);
+      // 2. medium and hard magnitude checks
+      let mediumProblems = [];
+      for (let i=0;i<40;i++) mediumProblems.push(generateProblem("medium"));
+      let hardProblems = [];
+      for (let i=0;i<40;i++) hardProblems.push(generateProblem("hard"));
+      const tooBigMedium = mediumProblems.filter(p=>Math.abs(p.answer)>100000).length;
+      const tooBigHard = hardProblems.filter(p=>Math.abs(p.answer)>100000).length;
+      console.log("Medium too-big answers:", tooBigMedium);
+      console.log("Hard too-big answers:", tooBigHard);
+      // 3. formatting sample
+      console.log("Formatted 1234567.5 =>", formatNumber(1234567.5));
+      // 4. parse decimals
+      console.log("Parse '3,5' =>", parseAnswer("3,5"), " Parse '3.5' =>", parseAnswer("3.5"));
+      // 5. Mixed tier spread
+      let mixed = [];
+      for(let i=0;i<60;i++) mixed.push(generateProblem("mixed").tier);
+      console.log("Mixed tier distribution:", mixed.reduce((acc,t)=>{acc[t]=(acc[t]||0)+1;return acc;},{}) );
+      document.getElementById("devBanner").classList.remove("hidden");
+    }
+
+    // Initialize
+    (function init(){
+      // read URL for dev mode
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("dev") === "1") {
+        setTimeout(runDevTests,200);
+      }
+      timerEnabled = document.getElementById("timerToggle").checked;
+      timerSeconds = Number(document.getElementById("timerSelect").value);
+      setMode("game");
+      newQuestion();
+      updateStatsDisplay();
+    })();
+  </script>
+</body>
+</html>
