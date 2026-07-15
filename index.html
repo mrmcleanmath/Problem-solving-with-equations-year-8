@@ -664,9 +664,13 @@ x = ${formatNumber(perimeter)} ÷ 8 = ${formatNumber(x)} cm`;
       },
 
       function(){
-        const total = randInt(80,300);
         const percent = choice([25,40,60]);
-        const trained = Math.round(total * percent / 100);
+        const requiredMultiple = percent === 25 ? 4 : 5;
+        const total = requiredMultiple * randInt(
+          Math.ceil(80 / requiredMultiple),
+          Math.floor(300 / requiredMultiple)
+        );
+        const trained = total * percent / 100;
         const q = `In a survey, ${percent}% of the people said that they exercise regularly.\nThat corresponds to ${formatNumber(trained)} people.\nHow many people were in the survey in total?`;
         const steps =
 `Let N be the total number of people.
@@ -824,7 +828,7 @@ x = ${formatNumber(longSide)} - 3 = ${formatNumber(triangleBase)} cm`;
       },
 
       function(){
-        const first = randInt(20,70);
+        const first = 2 * randInt(10,35);
         const second = first + 2;
         const third = first + 4;
         const sum = first + second + third;
@@ -913,7 +917,7 @@ x = ${formatNumber(spent)} × 4 ÷ 3 = ${formatNumber(original)} kr`;
       function(){
         const smaller = 26;
         const larger = 39;
-        const q = `The number 65 is split into two smaller numbers.\nIf you multiply the first number by 2 and the second number by 3, the results are the same.\nWhat are the two numbers?`;
+        const q = `The number 65 is split into two smaller numbers.\nIf you multiply the first number by 3 and the second number by 2, the results are the same.\nWhat are the two numbers?`;
         const steps =
 `Let x be the smaller number.
 Then the larger number is 65 - x.
@@ -1594,6 +1598,31 @@ Total tickets = x + 2x = 3x = ${formatNumber(adultTickets + youthTickets)}`;
       let mixed = [];
       for(let i=0;i<60;i++) mixed.push(generateProblem("mixed").tier);
       console.log("Mixed tier distribution:", mixed.reduce((acc,t)=>{acc[t]=(acc[t]||0)+1;return acc;},{}));
+
+      // Targeted regression test: consecutive-even-number questions
+      let consecutiveEvenFailures = [];
+      for (let i=0; i<500; i++) {
+        const p = mediumGenerators[5]();
+        const values = p.answers.map(a => a.value);
+        const valid =
+          values.length === 3 &&
+          values.every(Number.isInteger) &&
+          values.every(n => n % 2 === 0) &&
+          values[1] === values[0] + 2 &&
+          values[2] === values[1] + 2;
+        if (!valid) consecutiveEvenFailures.push(p);
+      }
+      console.log("Consecutive-even-number failures:", consecutiveEvenFailures.length);
+
+      // Targeted regression test: survey percentage questions
+      let surveyFailures = [];
+      for (let i=0; i<500; i++) {
+        const p = easyGenerators[4]();
+        if (!Number.isInteger(p.answer) || !isFinite(p.answer)) {
+          surveyFailures.push(p);
+        }
+      }
+      console.log("Survey-percentage failures:", surveyFailures.length);
 
       document.getElementById("devBanner").classList.remove("hidden");
     }
